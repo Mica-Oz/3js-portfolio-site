@@ -212,7 +212,12 @@ function useAnimationFrame(callback) {
   const requestRef = useRef();
   const previousTimeRef = useRef();
   const callbackRef = useRef(callback);
-  callbackRef.current = callback;
+
+  // Update the ref when callback changes without touching refs during render
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
+
   useEffect(() => {
     const animate = (time) => {
       if (previousTimeRef.current !== undefined) {
